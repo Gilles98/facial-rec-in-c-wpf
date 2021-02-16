@@ -7,6 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="20 10 10 20">
+            <Label Content="Camera:"/>
+            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding LijstApparaten}" SelectedIndex="{Binding SelectedCamera}">
+            </ComboBox>
+        </StackPanel>
+        <Image Source ="{Binding Bi}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+        <Button CommandParameter="Camera" Command="{Binding}" Margin="20">start</Button>
     </Grid>
 </Window>
