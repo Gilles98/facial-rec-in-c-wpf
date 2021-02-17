@@ -23,6 +23,7 @@
             </ComboBox>
         </StackPanel>
         <Image Source ="{Binding Bi}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+        <Button CommandParameter="TakeFoto" Command="{Binding}" Grid.Column="2" Margin="20">take foto</Button>
         <Button CommandParameter="Camera" Command="{Binding}" Margin="20">start</Button>
     </Grid>
 </Window>

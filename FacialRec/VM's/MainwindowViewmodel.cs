@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AForge.Video;
@@ -21,8 +22,9 @@ namespace FacialRec.VM_s
         private List<string> _lijstApparaten;
         private int _selectedCamera;
         private Image _img;
+        private Image _img2;
         private BitmapImage _bi;
-
+        private BitmapImage _bi2;
         public BitmapImage Bi
         {
             get
@@ -36,6 +38,20 @@ namespace FacialRec.VM_s
                 NotifyPropertyChanged();
             }
         }
+
+        public BitmapImage Bi2
+        {
+            get
+            {
+                return _bi2;
+            }
+
+            set
+            {
+                _bi2 = value;
+                NotifyPropertyChanged();
+            }
+        }
         public Image Img
         {
             get
@@ -45,6 +61,19 @@ namespace FacialRec.VM_s
             set
             {
                 _img = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Image Img2
+        {
+            get
+            {
+                return _img2;
+            }
+            set
+            {
+                _img2 = value;
                 NotifyPropertyChanged();
             }
         }
@@ -131,11 +160,11 @@ namespace FacialRec.VM_s
                     VCD = new VideoCaptureDevice(Fic[SelectedCamera].MonikerString);
                     VCD.NewFrame += (s, e) =>
                     {
-                        Img = (Bitmap)e.Frame.Clone();
+                        Img = (Image)e.Frame.Clone();
                         var bi = new BitmapImage();
                         bi.BeginInit();
                         MemoryStream ms = new MemoryStream();
-                        Img.Save(ms, ImageFormat.Png);
+                        Img.Save(ms, ImageFormat.Jpeg);
                         ms.Seek(0, SeekOrigin.Begin);
 
                         bi.StreamSource = ms;
@@ -149,6 +178,20 @@ namespace FacialRec.VM_s
             }
             
         }
+
+        public void FotoNemen()
+        {
+
+            if (Bi != null)
+            {
+                
+                Bi2 = Bi;
+                FotoScherm vm = new FotoScherm(Bi2);
+                Window1 window = new Window1();
+                window.DataContext = vm;
+                window.Show();
+            }
+        }
         public override bool CanExecute(object parameter)
         {
             return true;
@@ -159,6 +202,10 @@ namespace FacialRec.VM_s
             if (parameter.ToString() == "Camera")
             {
                 FotoTonen();
+            }
+            else
+            {
+                FotoNemen();
             }
         }
     }

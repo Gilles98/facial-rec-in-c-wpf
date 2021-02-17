@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacialRec", "FacialRec.csproj", "{C148E94A-F63C-44F0-9AB3-C80D613C5B74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacialRec_DAL", "..\FacialRec_DAL\FacialRec_DAL.csproj", "{1DAD7D6C-2DF9-4259-AFCB-25B7E63B8E5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C148E94A-F63C-44F0-9AB3-C80D613C5B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C148E94A-F63C-44F0-9AB3-C80D613C5B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C148E94A-F63C-44F0-9AB3-C80D613C5B74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DAD7D6C-2DF9-4259-AFCB-25B7E63B8E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DAD7D6C-2DF9-4259-AFCB-25B7E63B8E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DAD7D6C-2DF9-4259-AFCB-25B7E63B8E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DAD7D6C-2DF9-4259-AFCB-25B7E63B8E5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
