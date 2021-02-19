@@ -4,8 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FacialRec"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -22,8 +29,14 @@
             <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding LijstApparaten}" SelectedIndex="{Binding SelectedCamera}">
             </ComboBox>
         </StackPanel>
-        <Image Source ="{Binding Bi}" Grid.Row="1" Grid.Column="1" Margin="5"/>
-        <Button CommandParameter="TakeFoto" Command="{Binding}" Grid.Column="2" Margin="20">take foto</Button>
-        <Button CommandParameter="Camera" Command="{Binding}" Margin="20">start</Button>
+        <Canvas Grid.Row="1" Margin="160,10.2,159.6,10.4" Grid.ColumnSpan="3" Name="canvas1">
+            <Image Source ="{Binding Bi}"  Width="{Binding Path=ActualWidth, ElementName=canvas1}" Height="{Binding Path=ActualHeight, ElementName=canvas1}" Stretch="Uniform"></Image>
+            <Rectangle Canvas.Left="180" Canvas.Top="30" Width="120" Height="100">
+                <Rectangle.Stroke>
+                    <SolidColorBrush Color="Red"/>
+                </Rectangle.Stroke>
+            </Rectangle>
+        </Canvas>
+        <Button CommandParameter="TakeFoto" Command="{Binding}" Grid.Column="1" Grid.Row="3" Margin="20">Registreer nieuw gezicht</Button>
     </Grid>
 </Window>

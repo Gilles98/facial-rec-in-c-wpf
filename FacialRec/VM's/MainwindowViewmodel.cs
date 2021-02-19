@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using AForge.Imaging.Filters;
 using AForge.Video;
 using AForge.Video.DirectShow;
 
@@ -21,7 +22,7 @@ namespace FacialRec.VM_s
         private VideoCaptureDevice _vcd;
         private List<string> _lijstApparaten;
         private int _selectedCamera;
-        private Image _img;
+        private Bitmap _img;
         private Image _img2;
         private BitmapImage _bi;
         private BitmapImage _bi2;
@@ -52,7 +53,7 @@ namespace FacialRec.VM_s
                 NotifyPropertyChanged();
             }
         }
-        public Image Img
+        public Bitmap Img
         {
             get
             {
@@ -144,34 +145,40 @@ namespace FacialRec.VM_s
         {
             Fic = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             LijstApparaten = new List<string>();
-            SelectedCamera = -1;
             foreach (FilterInfo item in Fic)
             {
                 LijstApparaten.Add(item.Name);
             }
             VCD = new VideoCaptureDevice();
+            Camera();
         }
 
-        public void FotoTonen()
+        public void Camera()
         {
             if (this.IsGeldig())
             {
-
                     VCD = new VideoCaptureDevice(Fic[SelectedCamera].MonikerString);
+                    Grayscale filter = new Grayscale(0.2125, 0.7154, 0.0721);
                     VCD.NewFrame += (s, e) =>
                     {
-                        Img = (Image)e.Frame.Clone();
-                        var bi = new BitmapImage();
+                       
+                        Img = filter.Apply((Bitmap)e.Frame.Clone());
+                        Img.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                     
+                        var bi = new BitmapImage() ;
                         bi.BeginInit();
                         MemoryStream ms = new MemoryStream();
+                        //Rectangle rect = new Rectangle(0, 0, 100, 100);
+                        //Bitmap bmp = new Bitmap(rect.Width, rect.Height, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+                        //Graphics g = Graphics.FromImage(bmp);
+                        //g.CopyFromScreen(rect.Left, rect.Top, 0, 0, bmp.Size, CopyPixelOperation.SourceCopy);
                         Img.Save(ms, ImageFormat.Jpeg);
                         ms.Seek(0, SeekOrigin.Begin);
 
                         bi.StreamSource = ms;
                         bi.EndInit();
-
                         bi.Freeze();
-
+                       
                         Dispatcher.CurrentDispatcher.Invoke(() => Bi = bi);
                     };
                     VCD.Start();
@@ -184,7 +191,7 @@ namespace FacialRec.VM_s
 
             if (Bi != null)
             {
-                
+
                 Bi2 = Bi;
                 FotoScherm vm = new FotoScherm(Bi2);
                 Window1 window = new Window1();
@@ -199,14 +206,9 @@ namespace FacialRec.VM_s
 
         public override void Execute(object parameter)
         {
-            if (parameter.ToString() == "Camera")
-            {
-                FotoTonen();
-            }
-            else
-            {
+           
                 FotoNemen();
-            }
+           
         }
     }
 }

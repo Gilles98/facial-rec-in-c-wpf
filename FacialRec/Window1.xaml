@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FacialRec"
         mc:Ignorable="d"
-        Title="Window1" Height="400" Width="400">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+
+        Title="Window1" Height="400" Width="500">
     <Grid>
-        <Image Source="{Binding Foto}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="270"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Source="{Binding Foto}" Grid.Row="0" Grid.ColumnSpan="3"/>
+        <TextBox Text="{Binding Voornaam, ValidatesOnDataErrors=True}" Grid.Row="1" Margin="10,31.6,10,29.4" materialDesign:HintAssist.Hint="Voornaam"></TextBox>
+        <TextBox Text="{Binding Achternaam, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1" Margin="10,31.6,9.8,29.4" materialDesign:HintAssist.Hint="Achternaam"></TextBox>
+        <Button Command="{Binding}" CommandParameter="Registreer" Content="Registreer" Margin="10.2,33.6,9.6,29.4" Grid.Row="1" Grid.Column="2" Height="Auto"/>
     </Grid>
 </Window>

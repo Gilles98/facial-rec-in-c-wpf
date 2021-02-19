@@ -17,5 +17,10 @@ namespace FacialRec_DAL.DomainModels
         public string Achternaam { get; set; }
 
         public byte [] Foto { get; set; }
+
+        public override string ToString()
+        {
+            return Achternaam;
+        }
     }
 }

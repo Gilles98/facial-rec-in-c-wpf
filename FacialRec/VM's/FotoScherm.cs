@@ -1,7 +1,9 @@
 ﻿using FacialRec.Service;
 using FacialRec_DAL;
+using FacialRec_DAL.DomainModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,8 +17,51 @@ namespace FacialRec.VM_s
     {
         private BitmapImage _foto;
         public Context _context;
-        public override string this[string columnName] => throw new NotImplementedException();
+        private string _voornaam;
+        private string _achternaam;
+        public override string this[string columnName]
+        {
+            get
+            {
+                string melding = "* Verplicht veld";
+                if (columnName  == "Voornaam" && string.IsNullOrWhiteSpace(Voornaam))
+                {
+                    return melding;
+                }
+                if (columnName == "Achternaam" && string.IsNullOrWhiteSpace(Achternaam))
+                {
+                    return melding;
+                }
+                return "";
+            }
+        }
 
+        public byte[] Bin { get; set; }
+        public string Voornaam
+        {
+            get
+            {
+                return _voornaam;
+            }
+            set
+            {
+                _voornaam = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Achternaam
+        {
+            get
+            {
+                return _achternaam;
+            }
+            set
+            {
+                _achternaam = value;
+                NotifyPropertyChanged();
+            }
+        }
         public BitmapImage Foto
         {
             get
@@ -30,66 +75,75 @@ namespace FacialRec.VM_s
             }
         }
 
+        private void OutputSchrijven()
+        {
+            for (int i = 0; i <= Bin.Length -1; i++)
+            {
+                Console.WriteLine("Byte " + i + ": " + Bin[i]);
+            }
+        }
+        private async void OutputAsync()
+        {
+            Task t = Task.Run(new Action(OutputSchrijven));
+            await t;
+        }
+        
         public FotoScherm(BitmapImage img)
         {
             _context = new Context();
-            Dialog d = new Dialog();
-            if (d.ToonMessageboxReturnAntwoord("Wilt u deze foto opslagen in de database?"))
-            {
-                Foto = img;
-                FotoOpslagen();
-                
-            }
-            else
-            {
-                d.ToonMessageBox("De eerste opgeslagen afbeelding wordt nu getoond!");
-                Foto = FotoOphalen(_context.Personen.Select(x => x.Foto).SingleOrDefault());
-            }
+            Foto = img;
+            Bin = _context.Personen.Select(x => x.Foto).FirstOrDefault();
+            OutputAsync();
         }
-        public BitmapImage FotoOphalen(byte[] byteArr)
-        {
-            using (MemoryStream ms = new MemoryStream(byteArr))
-            {
-                ms.Seek(0, SeekOrigin.Begin);
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = ms;
-                image.EndInit();
+        //voor later te gebruiken
+        //public BitmapImage FotoOphalen(byte[] byteArr)
+        //{
+        //    using (MemoryStream ms = new MemoryStream(byteArr))
+        //    {
+        //        ms.Seek(0, SeekOrigin.Begin);
+        //        var image = new BitmapImage();
+        //        image.BeginInit();
+        //        image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+        //        image.CacheOption = BitmapCacheOption.OnLoad;
+        //        image.StreamSource = ms;
+        //        image.EndInit();
 
-                return image;
-            }
-        }
+        //        return image;
+        //    }
+        //}
         public void FotoOpslagen()
         {
             //preset voor testing
-            string voornaam = "Gilles";
-            string achternaam = "Gui";
-            byte[] data;
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(Foto));
-            using (MemoryStream ms = new MemoryStream())
+            if (this.IsGeldig())
             {
-                encoder.Save(ms);
-                data = ms.ToArray();
-            }
-            _context.Personen.Add(new FacialRec_DAL.DomainModels.Persoon { Achternaam = achternaam, Voornaam = voornaam, Foto = data });
-            int ok = _context.SaveChanges();
-            if (ok > 0)
-            {
-                Dialog d = new Dialog();
-                d.ToonMessageBox("Geslaagd!");
+                byte[] data;
+                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(Foto));
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    encoder.Save(ms);
+                    data = ms.ToArray();
+                }
+                _context.Personen.Add(new FacialRec_DAL.DomainModels.Persoon { Achternaam = Achternaam, Voornaam = Voornaam, Foto = data });
+                int ok = _context.SaveChanges();
+                if (ok > 0)
+                {
+                    Dialog d = new Dialog();
+                    d.ToonMessageBox("Geslaagd!");
+                }
             }
         }
         public override bool CanExecute(object parameter)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            if (parameter.ToString() == "Registreer")
+            {
+                FotoOpslagen();
+            }
         }
     }
 }
